@@ -1,11 +1,19 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Check } from "lucide-react";
 
 const timeSlots = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
 
+interface BookingState {
+  professionalName?: string;
+  serviceName?: string;
+  servicePrice?: string;
+}
+
 const Booking = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { professionalName, serviceName, servicePrice } = (location.state as BookingState) ?? {};
   const [step, setStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -33,11 +41,11 @@ const Booking = () => {
           <div className="flex flex-col gap-3">
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground font-body">Profissional</span>
-              <span className="text-sm font-semibold text-foreground font-body">Ana Paula</span>
+              <span className="text-sm font-semibold text-foreground font-body">{professionalName ?? "—"}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground font-body">Serviço</span>
-              <span className="text-sm font-semibold text-foreground font-body">Corte feminino</span>
+              <span className="text-sm font-semibold text-foreground font-body">{serviceName ?? "—"}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground font-body">Data</span>
@@ -52,7 +60,7 @@ const Booking = () => {
             <hr className="border-border" />
             <div className="flex justify-between">
               <span className="text-sm font-semibold text-foreground font-body">Total</span>
-              <span className="text-base font-bold text-primary font-body">R$ 80</span>
+              <span className="text-base font-bold text-primary font-body">{servicePrice ?? "—"}</span>
             </div>
           </div>
         </div>

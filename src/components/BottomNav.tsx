@@ -1,11 +1,10 @@
-import { Home, Search, Calendar, Trophy, User } from "lucide-react";
+import { Home, Search, Calendar, User } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const navItems = [
   { icon: Home, label: "Home", path: "/home" },
   { icon: Search, label: "Buscar", path: "/search" },
   { icon: Calendar, label: "Agenda", path: "/booking" },
-  { icon: Trophy, label: "Ranking", path: "/pro/ranking" },
   { icon: User, label: "Perfil", path: "/profile" },
 ];
 

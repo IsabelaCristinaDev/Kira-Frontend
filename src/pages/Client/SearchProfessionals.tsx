@@ -14,10 +14,27 @@ const allProfessionals = [
 
 const filters = ["Todos", "Cabelo", "Barba", "Unhas", "Estética", "Massagem"];
 
+const filterKeywords: Record<string, string> = {
+  Cabelo: "cabel",
+  Barba: "barb",
+  Unhas: "unha",
+  Estética: "estét",
+  Massagem: "massag",
+};
+
 const SearchProfessionals = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("Todos");
+
+  const filteredProfessionals = allProfessionals.filter((prof) => {
+    const q = query.trim().toLowerCase();
+    const matchesQuery =
+      q === "" || prof.name.toLowerCase().includes(q) || prof.specialty.toLowerCase().includes(q);
+    const matchesFilter =
+      activeFilter === "Todos" || prof.specialty.toLowerCase().includes(filterKeywords[activeFilter] ?? "");
+    return matchesQuery && matchesFilter;
+  });
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -58,7 +75,12 @@ const SearchProfessionals = () => {
       </div>
 
       <div className="px-6 mt-4 flex flex-col gap-4">
-        {allProfessionals.map((prof) => (
+        {filteredProfessionals.length === 0 && (
+          <p className="text-center text-sm text-muted-foreground font-body py-8">
+            Nenhum profissional encontrado.
+          </p>
+        )}
+        {filteredProfessionals.map((prof) => (
           <button
             key={prof.id}
             onClick={() => navigate(`/professional/${prof.id}`)}

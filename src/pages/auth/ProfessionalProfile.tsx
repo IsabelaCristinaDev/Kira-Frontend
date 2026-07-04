@@ -91,7 +91,15 @@ const ProfessionalProfile = () => {
           {prof.services.map((service) => (
             <button
               key={service.name}
-              onClick={() => navigate("/booking")}
+              onClick={() =>
+                navigate("/booking", {
+                  state: {
+                    professionalName: prof.name,
+                    serviceName: service.name,
+                    servicePrice: service.price,
+                  },
+                })
+              }
               className="flex items-center justify-between p-4 rounded-2xl bg-card border border-border hover:shadow-kira transition-all text-left"
             >
               <div>
@@ -109,7 +117,15 @@ const ProfessionalProfile = () => {
         </div>
 
         <button
-          onClick={() => navigate("/booking")}
+          onClick={() =>
+            navigate("/booking", {
+              state: {
+                professionalName: prof.name,
+                serviceName: prof.services[0]?.name,
+                servicePrice: prof.services[0]?.price,
+              },
+            })
+          }
           className="w-full py-4 rounded-2xl gradient-kira text-primary-foreground font-semibold text-base font-body shadow-kira-glow transition-transform hover:scale-[1.02] active:scale-[0.98]"
         >
           Agendar serviço

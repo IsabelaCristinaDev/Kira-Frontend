@@ -3,12 +3,12 @@ import { ChevronLeft, ChevronRight, Check, X, Clock } from "lucide-react";
 import ProBottomNav from "@/components/ProBottomNav.tsx";
 
 const appointments = [
-  { id: 1, client: "Juliana M.", service: "Corte masculino", time: "09:00", duration: "30 min", price: "R$ 50", status: "confirmado" },
-  { id: 2, client: "Ricardo P.", service: "Barba", time: "10:00", duration: "20 min", price: "R$ 30", status: "confirmado" },
-  { id: 3, client: "Amanda F.", service: "Corte + Barba", time: "11:00", duration: "50 min", price: "R$ 70", status: "pendente" },
-  { id: 4, client: "Pedro S.", service: "Corte masculino", time: "14:00", duration: "30 min", price: "R$ 50", status: "pendente" },
-  { id: 5, client: "Fernanda L.", service: "Barba", time: "15:00", duration: "20 min", price: "R$ 30", status: "confirmado" },
-  { id: 6, client: "Lucas G.", service: "Corte + Barba", time: "16:00", duration: "50 min", price: "R$ 70", status: "confirmado" },
+  { id: 1, day: 0, client: "Juliana M.", service: "Corte masculino", time: "09:00", duration: "30 min", price: "R$ 50", status: "confirmado" },
+  { id: 2, day: 0, client: "Ricardo P.", service: "Barba", time: "10:00", duration: "20 min", price: "R$ 30", status: "confirmado" },
+  { id: 3, day: 0, client: "Amanda F.", service: "Corte + Barba", time: "11:00", duration: "50 min", price: "R$ 70", status: "pendente" },
+  { id: 4, day: 1, client: "Pedro S.", service: "Corte masculino", time: "14:00", duration: "30 min", price: "R$ 50", status: "pendente" },
+  { id: 5, day: 1, client: "Fernanda L.", service: "Barba", time: "15:00", duration: "20 min", price: "R$ 30", status: "confirmado" },
+  { id: 6, day: 3, client: "Lucas G.", service: "Corte + Barba", time: "16:00", duration: "50 min", price: "R$ 70", status: "confirmado" },
 ];
 
 const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
@@ -21,6 +21,12 @@ const ProAgenda = () => {
     d.setDate(d.getDate() + i);
     return d;
   });
+
+  const dayAppointments = appointments.filter((apt) => apt.day === selectedDay);
+  const dayRevenue = dayAppointments.reduce(
+    (sum, apt) => sum + Number(apt.price.replace(/\D/g, "")),
+    0
+  );
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -52,12 +58,12 @@ const ProAgenda = () => {
         {/* Summary */}
         <div className="flex items-center gap-4 mb-6 p-4 rounded-2xl bg-muted">
           <div className="text-center flex-1">
-            <p className="text-2xl font-bold text-foreground font-body">{appointments.length}</p>
+            <p className="text-2xl font-bold text-foreground font-body">{dayAppointments.length}</p>
             <p className="text-xs text-muted-foreground font-body">Atendimentos</p>
           </div>
           <div className="w-px h-8 bg-border" />
           <div className="text-center flex-1">
-            <p className="text-2xl font-bold text-primary font-body">R$ 300</p>
+            <p className="text-2xl font-bold text-primary font-body">R$ {dayRevenue}</p>
             <p className="text-xs text-muted-foreground font-body">Faturamento</p>
           </div>
         </div>
@@ -68,7 +74,12 @@ const ProAgenda = () => {
         </h2>
 
         <div className="flex flex-col gap-3">
-          {appointments.map((apt) => (
+          {dayAppointments.length === 0 && (
+            <p className="text-center text-sm text-muted-foreground font-body py-8">
+              Nenhum atendimento neste dia.
+            </p>
+          )}
+          {dayAppointments.map((apt) => (
             <div
               key={apt.id}
               className="p-4 rounded-2xl bg-card border border-border shadow-kira"

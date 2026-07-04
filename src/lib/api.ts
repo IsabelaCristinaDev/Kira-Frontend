@@ -2,10 +2,10 @@
  * Cliente HTTP mínimo para integração com o backend Spring Boot.
  *
  * Ponto único de configuração do endereço da API. Ajuste via variável de
- * ambiente VITE_API_BASE_URL (ver .env.example) sem precisar alterar código.
+ * ambiente VITE_API_BASE_URL (ver .env) sem precisar alterar código.
  */
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080/api";
+    import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8081/api";
 
 const DEFAULT_TIMEOUT_MS = 8000;
 

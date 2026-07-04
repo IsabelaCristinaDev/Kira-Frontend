@@ -526,7 +526,7 @@ const ProfessionalSignup = () => {
     // segue o fluxo normalmente para não travar a experiência do usuário.
     await registerProfessional(form);
     toast.success("Cadastro concluído!");
-    navigate("/home");
+    navigate("/pro/dashboard");
   };
 
   if (step === "face") {

@@ -15,6 +15,7 @@ import {
   Star,
 } from "lucide-react";
 import BottomNav from "@/components/BottomNav.tsx";
+import { logout } from "@/lib/auth.ts";
 
 const stats = [
   { icon: Calendar, label: "Agendamentos", value: "12" },
@@ -62,7 +63,10 @@ const Profile = () => {
             Meu Perfil
           </h1>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => {
+              logout();
+              navigate("/");
+            }}
             className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center"
             aria-label="Sair"
           >
@@ -149,7 +153,10 @@ const Profile = () => {
         ))}
 
         <button
-          onClick={() => navigate("/")}
+          onClick={() => {
+            logout();
+            navigate("/");
+          }}
           className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-destructive/30 text-destructive font-body font-medium hover:bg-destructive/5 transition-colors"
         >
           <LogOut size={16} />
