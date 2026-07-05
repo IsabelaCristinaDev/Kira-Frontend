@@ -319,21 +319,22 @@ const ClientSignup = () => {
   };
 
   const registerClient = (data: FormState) =>
-    apiPost("/clients/register", {
-      name: data.name,
+    apiPost("/auth/registro/cliente", {
+      nome: data.name,
       email: data.email,
-      phone: onlyDigits(data.phone),
+      senha: data.password,
+      telefone: onlyDigits(data.phone),
       cpf: onlyDigits(data.cpf),
-      birth: data.birth,
-      gender: data.gender,
-      address: {
+      dataNascimento: data.birth,
+      genero: data.gender.toUpperCase(),
+      endereco: {
         cep: onlyDigits(data.cep),
-        street: data.street,
-        number: data.number,
-        complement: data.complement,
-        neighborhood: data.neighborhood,
-        city: data.city,
-        state: data.state,
+        logradouro: data.street,
+        numero: data.number,
+        complemento: data.complement,
+        bairro: data.neighborhood,
+        cidade: data.city,
+        estado: data.state,
       },
       latitude: data.latitude,
       longitude: data.longitude,

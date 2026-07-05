@@ -100,6 +100,7 @@ const personalSchema = z
       .regex(/\s/, { message: "Informe nome e sobrenome" }),
     documentType: z.enum(["cpf", "cnpj"]),
     document: z.string(),
+    establishmentType: z.enum(["ESTABELECIMENTO", "AUTONOMA"]),
     birth: z
       .string()
       .min(1, { message: "Informe sua data de nascimento" })
@@ -173,6 +174,7 @@ type FormState = {
   name: string;
   documentType: "cpf" | "cnpj";
   document: string;
+  establishmentType: "ESTABELECIMENTO" | "AUTONOMA";
   email: string;
   phone: string;
   birth: string;
@@ -201,6 +203,7 @@ const initialForm: FormState = {
   name: "",
   documentType: "cpf",
   document: "",
+  establishmentType: "AUTONOMA",
   email: "",
   phone: "",
   birth: "",
@@ -415,13 +418,14 @@ const ProfessionalSignup = () => {
 
   const handleSubmitForm = (e: React.FormEvent) => {
     e.preventDefault();
-    const { photo, name, documentType, document, birth, phone, email, password, confirm } = form;
+    const { photo, name, documentType, document, establishmentType, birth, phone, email, password, confirm } = form;
     if (
       !validateStep(personalSchema, {
         photo,
         name,
         documentType,
         document,
+        establishmentType,
         birth,
         phone,
         email,
@@ -488,34 +492,35 @@ const ProfessionalSignup = () => {
   };
 
   const registerProfessional = (data: FormState) =>
-    apiPost("/professionals/register", {
-      name: data.name,
-      documentType: data.documentType,
-      document: onlyDigits(data.document),
+    apiPost("/auth/registro/empresa", {
+      nome: data.name,
       email: data.email,
-      phone: onlyDigits(data.phone),
-      birth: data.birth,
-      address: {
+      senha: data.password,
+      telefone: onlyDigits(data.phone),
+      cpf: data.documentType === "cpf" ? onlyDigits(data.document) : null,
+      cnpj: data.documentType === "cnpj" ? onlyDigits(data.document) : null,
+      tipoEstabelecimento: data.establishmentType,
+      dataNascimento: data.birth,
+      endereco: {
         cep: onlyDigits(data.cep),
-        street: data.street,
-        number: data.number,
-        complement: data.complement,
-        neighborhood: data.neighborhood,
-        city: data.city,
-        state: data.state,
+        logradouro: data.street,
+        numero: data.number,
+        complemento: data.complement,
+        bairro: data.neighborhood,
+        cidade: data.city,
+        estado: data.state,
       },
       latitude: data.latitude,
       longitude: data.longitude,
-      specialties: data.specialties,
-      services: data.services.map((s) => ({
-        name: s.name,
-        price: s.price,
-        duration: s.duration,
+      especialidades: data.specialties,
+      servicos: data.services.map((s) => ({
+        nome: s.name,
+        preco: s.price,
+        duracao: s.duration,
       })),
       // Fotos de perfil, documento e trabalhos usam base64 hoje (armazenadas
       // só em memória local). O envio real como arquivo (multipart/form-data)
       // para o backend é um passo futuro, fora do escopo desta integração inicial.
-      workPhotosCount: data.workPhotos.length,
     });
 
   const handleSubmitTerms = async (e: React.FormEvent) => {
@@ -721,6 +726,30 @@ const ProfessionalSignup = () => {
                 placeholder={form.documentType === "cpf" ? "000.000.000-00" : "00.000.000/0000-00"}
                 className={inputClass("document")}
               />
+            </Field>
+
+            <Field label="Como você atende?" error={errors.establishmentType}>
+              <div className="flex gap-2">
+                {(
+                  [
+                    { value: "AUTONOMA", label: "Sou autônoma(o)" },
+                    { value: "ESTABELECIMENTO", label: "Tenho estabelecimento" },
+                  ] as const
+                ).map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setField("establishmentType", opt.value)}
+                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold font-body transition-all ${
+                      form.establishmentType === opt.value
+                        ? "gradient-kira text-primary-foreground shadow-kira"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             </Field>
 
             <Field label="Data de nascimento" error={errors.birth}>
